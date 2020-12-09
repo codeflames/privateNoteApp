@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:private_notes_app/add_home_screen.dart';
+import 'package:private_notes_app/add_note_screen.dart';
+import 'package:private_notes_app/add_others_screen.dart';
+import 'package:private_notes_app/add_work_todo_screen.dart';
 import 'package:private_notes_app/models/notes_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +19,12 @@ class _HomePageState extends State<HomePage>
   TabController _tabController;
   final DateFormat _dateFormatter = DateFormat('dd MMM');
   final DateFormat _timeFormatter = DateFormat('h:mm');
+  final List routes = [
+    AddNote(),
+    AddWork(),
+    AddHome(),
+    AddOthers(),
+  ];
 
   @override
   void initState() {
@@ -63,15 +73,33 @@ class _HomePageState extends State<HomePage>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                count.toString(),
-                style: TextStyle(
-                  color: _selectedCategoryIndex == index
-                      ? Colors.white
-                      : Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    count.toString(),
+                    style: TextStyle(
+                      color: _selectedCategoryIndex == index
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => routes[index],
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -122,7 +150,7 @@ class _HomePageState extends State<HomePage>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      _dateFormatter.format(notes[0].date),
+                      _dateFormatter.format(notes[index].date),
                       style: TextStyle(
                         color: Color(0xFFAFB4C6),
                         fontSize: 18.0,

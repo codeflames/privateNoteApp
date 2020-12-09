@@ -6,13 +6,24 @@ class Note {
   Note({this.title, this.content, this.date});
 }
 
+addNotes({String title, String content}) {
+  notes.add(Note(
+    title: title,
+    content: content,
+    date: DateTime.now(),
+  ));
+}
+
 final Map<String, int> categories = {
-  'Notes': 112,
-  'Work': 58,
-  'Home': 23,
-  'Complete': 31,
+  'Notes': notes.length,
+  'Work': works.length,
+  'Home': home.length,
+  'Others': others.length,
 };
 
+final List<Note> works = [];
+final List<Note> home = [];
+final List<Note> others = [];
 final List<Note> notes = [
   Note(
     title: 'Buy ticket',
