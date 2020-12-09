@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:private_notes_app/models/notes_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +13,8 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   int _selectedCategoryIndex = 0;
   TabController _tabController;
+  final DateFormat _dateFormatter = DateFormat('dd MMM');
+  final DateFormat _timeFormatter = DateFormat('h:mm');
 
   @override
   void initState() {
@@ -77,6 +80,76 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  Widget noteList() {
+    return ListView.builder(
+        itemCount: notes.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: Color(0xFFF5F7FB),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      notes[index].title,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      _timeFormatter.format(notes[index].date),
+                      style: TextStyle(
+                        color: Color(0xFFAFB4C6),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 15),
+                Text(notes[index].content),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      _dateFormatter.format(notes[0].date),
+                      style: TextStyle(
+                        color: Color(0xFFAFB4C6),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      height: 30.0,
+                      width: 30.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF417BFB),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,8 +177,8 @@ class _HomePageState extends State<HomePage>
                   Text(
                     'Jenny Valentine',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -114,19 +187,79 @@ class _HomePageState extends State<HomePage>
             //Notes category widget
 
             Container(
-                height: 280,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return SizedBox(width: 20);
-                      }
-                      return categoryCardBuilder(
-                          index - 1,
-                          categories.keys.toList()[index - 1],
-                          categories.values.toList()[index - 1]);
-                    }))
+              height: 280,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return SizedBox(width: 20);
+                  }
+                  return categoryCardBuilder(
+                      index - 1,
+                      categories.keys.toList()[index - 1],
+                      categories.values.toList()[index - 1]);
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.blue,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorWeight: 4,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  child: Text(
+                    'Notes',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Important',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Performed',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width * .88,
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  noteList(),
+                  Container(
+                    child: Text('important'),
+                  ),
+                  Container(
+                    child: Text('Performed'),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
