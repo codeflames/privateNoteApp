@@ -1,6 +1,6 @@
 # private_notes_app
 
-A new Flutter project.
+An offline note taker app that will sync with the online database when there's internet connection
 
 ## Getting Started
 
